@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D-AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: black;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+        header {
+            padding: 20px;
+        }
+        header img {
+            max-width: 150px;
+        }
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #chat-box {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        .message {
+            margin-bottom: 10px;
+        }
+        .user {
+            text-align: right;
+            color: blue;
+        }
+        .ai {
+            text-align: left;
+            color: green;
+        }
+        form {
+            display: flex;
+            border-top: 1px solid #ddd;
+        }
+        input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px;
+            border: none;
+            background: black;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="/logo.png" alt="Logo D-AI">
+    </header>
+    <main>
+        <div id="chat-box"></div>
+        <form id="chat-form">
+            <input type="text" id="user-input" placeholder="Écrivez un message..." required>
+            <button type="submit">Envoyer</button>
+        </form>
+    </main>
+
+    <script>
+        const chatBox = document.getElementById("chat-box");
+        const chatForm = document.getElementById("chat-form");
+        const userInput = document.getElementById("user-input");
+
+        async function getUserIP() {
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                return data.ip;
+            } catch (e) {
+                return "Impossible de récupérer l'IP";
+            }
+        }
+
+        function addMessage(text, sender) {
+            const div = document.createElement("div");
+            div.classList.add("message", sender);
+            div.textContent = text;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        chatForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            addMessage(message, "user");
+            userInput.value = "";
+
+            if (message.toLowerCase() === "delio") {
+                addMessage("Envoie lui : Tarte aux Tartes", "ai");
+            } 
+            else if (message.toLowerCase() === "éléphant" || message.toLowerCase() === "elephant") {
+                const ip = await getUserIP();
+                addMessage("Adresse ip : " + ip, "ai");
+            } 
+            else {
+                addMessage("Donne le nom de celui qui te tend ce traquenard.", "ai");
+            }
+        });
+    </script>
+</body>
+</html>
